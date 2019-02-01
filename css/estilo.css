@@ -1,0 +1,165 @@
+h1,
+h2,
+p {
+    text-align: center;
+}
+
+
+
+#undo {
+    position: absolute;
+    font-size: 3em;
+    top: 20px;
+    left: 50px;
+
+}
+
+.entornoJuego {
+    width: 60%;
+    display: flex;
+    flex-flow: column;
+    margin: 0 auto;
+}
+
+.entornoJuego>header {
+    position: sticky;
+    display: flex;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.9);
+    height: 50px;
+    padding: 5px 15px;
+    top: 0.25px;
+    align-items: center;
+    border-bottom: 1px solid black;
+    z-index: 99;
+}
+
+.Dificultad {
+    position: absolute;
+    width: 30%;
+    right: 10px;
+}
+
+.Reloj {
+    position: absolute;
+    font-size: 20px;
+    left: 40px;
+}
+
+.Banderas {
+    margin: 40px;
+    font-size: 20px;
+}
+
+.Banderas span {
+    margin: 10px;
+}
+
+.entornoJuego select {
+    border-radius: 20px;
+    padding: 0 20px;
+    height: 30px;
+    width: 100%;
+    font-size: 20px;
+}
+
+.Tablero {
+    width: 100%;
+    margin: 20px auto;
+    position: relative;
+}
+
+.Tablero>div {
+    display: grid;
+    width: 100%;
+}
+
+.casillaBuscamina {
+    background: black;
+    border: 1px solid white;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.casillaBuscamina span {
+    font-size: 20px;
+    
+}
+
+
+.Reinicia {
+    display: none;
+    position: fixed;
+    right: 50px;
+    bottom: 50px;
+    font-size: 100px;
+    /* transition-duration: 1s; */
+}
+
+.Reinicia:hover {
+    transition-duration: 2s;
+    transform: rotate(-360deg);
+}
+
+.mensajeVictoria {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.7);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 50px;
+}
+
+.casillaDescubierta{
+    background-color: white;
+    border: 1px solid black;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 1s; 
+    transform-style: preserve-3d;
+    background-size: cover;
+}
+.casillaMarcada{
+    background: url('../img/bandera.png');
+    background-size: cover;
+    border: 1px solid white;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@-webkit-keyframes animacion{
+    50%{
+        transform: translate(-10%,-10%);
+        *transform: rotateY(180deg);
+        *transform: rotateX(180deg);
+        *transform: rotateZ(180deg);
+        
+    }
+    100%{
+        transform: translate(0,0);
+        transform: scale(1);
+        transform: rotateY(0deg);
+        transform: rotateX(0deg);
+        transform: rotateZ(0deg);
+    }
+}
+
+.scale-animation{
+    animation: scale-animation 1s;
+}
+
+@-webkit-keyframes scale-animation{
+    50%{
+        transform: scale(1.5);
+    }
+    100%{
+        transform: scale(1);
+        
+    }
+}

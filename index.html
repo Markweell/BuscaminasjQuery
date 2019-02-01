@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Marcos Gallardo Pérez">
+    </meta>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JavaScript</title>
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+        crossorigin="anonymous">
+</head>
+
+<body>
+    <header>
+        <figure>
+            <img src="../../../img/perfil.jpg" />
+            <figcaption>
+                Marcos Gallardo Pérez
+            </figcaption>
+        </figure>
+        <ul>
+            <li><a href="https://twitter.com/Markweell"><i class="fab fa-twitter"></i></a></li>
+            <li><a href="https://www.linkedin.com/in/marcos-gallardo-p%C3%A9rez-0027a0153/"><i class="fab fa-linkedin-in"></i></a></li>
+            <li><a href="https://github.com/Markweell?tab=repositories"><i class="fab fa-github"></i></a></li>
+        </ul>
+
+    </header>
+    <nav>
+        <ul>
+            <a href="../../../index.html">
+                <li>Inicio</li>
+            </a>
+            <a href="../../../1.Cliente/index.html">
+                <li>JavaScript</li>
+            </a>
+            <a href="../../../2.Diseño/index.html">
+                <li>Diseño</li>
+            </a>
+            <a href="../../../3.Servidor/index.html">
+                <li>PHP</li>
+            </a>
+            <a href="../../../4.Android/index.html">
+                <li>Android</li>
+            </a>
+        </ul>
+    </nav>
+    <main class="cuarta">
+        <span><a href="../../../1.Cliente/Tema7/index.html"><i class="fas fa-arrow-left"></i></a></span>
+        <div>
+            <div class="enunciadoPrincipal">Crear el mítico juego del buscaminas usando JQuery.
+                <div class="enunciadoSecundario">
+                    <ul>
+                        <li>Utilizando closures, créate un objeto Buscaminas al que puedas invocar los siguientes
+                            métodos (el resto quedará privado):
+                            <ol>
+                                <li>Buscaminas .init(): genera un campo de minas nuevo y lo muestra por consola</li>
+                                <li>Buscaminas .mostrar(): muestra el campo de minas por consola.</li>
+                                <li>Buscaminas .picar(x, y): pica en la casilla (x, y) y muestra el campo de minas
+                                    actualizado.
+                                    <ol>
+                                        <li>En caso de picar una minas se indica que se ha perdido el juego. </li>
+                                        <li>En caso de no quedar casillas por levantar se indica que se ha ganado el
+                                            juego.</li>
+                                    </ol>
+                                </li>
+                                <li>Buscaminas .marcar(x, y): marca con una bandera la casilla (x, y) y muestra el
+                                    campo de minas actualizado.</li>
+                                <li>Buscaminas .despejar(x, y): intenta destapar las casillas colindantes, sólo si el
+                                    número de banderas se corresponden con las que indica la casilla. Entonces muestra
+                                    el campo de minas actualizado.
+                                    <ol>
+                                        <li>En caso de estar las banderas equivocadas se indica que se ha perdido el
+                                            juego.</li>
+                                    </ol>
+                                </li>
+                            </ol>
+                        </li>
+                        <li>Generar el entorno gráfico.</li>
+                    </ul>
+                </div>
+            </div>
+            <a href="buscaminas.html"><div class="irAEjercicio">Ir a Ejercicio </div></a>
+            <a href="https://github.com/Markweell/Markweell.github.io/tree/master/1.Cliente/Tema7/BuscaminasConJQuery"><div class="verCodigo">Ver
+                    Código</div></a>
+        </div>
+    </main>
+</body>
+
+</html>

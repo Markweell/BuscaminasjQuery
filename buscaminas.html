@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="author" content="Marcos Gallardo Pérez">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <script src="js/velocity.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/buscaminas.js"></script>
+    <script src="js/main.js"></script>
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+        crossorigin="anonymous">
+    <title>Buscaminas</title>
+</head>
+
+<body>
+    <noscript>Para el correcto funcionamiento de la página es necesario tener activado Javascript</noscript>
+    <span id="undo"><a href="../../../1.Cliente/Tema7/BuscaminasConJQuery/index.html"><i class="fas fa-arrow-left"></i></a></span>
+    <h1>Marcos Gallardo Pérez - Buscaminas En JQuery</h1>
+
+    <div class="entornoJuego">
+        <header>
+            <div class="Reloj"><span id="horas">00</span>:<span id="minutos">00</span>:<span id="segundos">00</span></div>
+            <div class="Banderas"><span id="numBanderas">0</span><span><i class="fas fa-flag"></i></span></div>
+            <div class="Dificultad">
+                <select name="dificultad" id="dificultad">
+                    <option value="Facil">Facil</option>
+                    <option value="Medio">Medio</option>
+                    <option value="Dificil">Dificil</option>
+                </select>
+            </div>
+        </header>
+        <div class="Tablero"></div>
+    </div>
+    <div class="Reinicia"><i class="fas fa-undo-alt"></i></div>
+</body>
+
+</html>
