@@ -113,14 +113,13 @@ p {
 }
 
 .casillaDescubierta{
-    background-color: white;
     border: 1px solid black;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: 1s; 
-    transform-style: preserve-3d;
+    *text-align: center;
+    *display: flex;
+    *justify-content: center;
+    *align-items: center;
+    *transition: 1s; 
+    *transform-style: preserve-3d;
     background-size: cover;
 }
 .casillaMarcada{
@@ -133,7 +132,7 @@ p {
     align-items: center;
 }
 
-@-webkit-keyframes animacion{
+@keyframes animacion{
     50%{
         transform: translate(-10%,-10%);
         *transform: rotateY(180deg);
@@ -153,13 +152,28 @@ p {
 .scale-animation{
     animation: scale-animation 1s;
 }
+.colorAnimation{
+    animation: colorAnimation 0.5s;
+}
 
-@-webkit-keyframes scale-animation{
+@keyframes scale-animation{
     50%{
         transform: scale(1.5);
     }
     100%{
         transform: scale(1);
+        
+    }
+}
+@keyframes colorAnimation{
+    0%{
+        background: purple;
+    }
+    95%{
+        background: purple;
+    }
+    100%{
+        background: black;
         
     }
 }

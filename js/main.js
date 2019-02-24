@@ -3,21 +3,20 @@
      * @author Marcos Gallardo Pérez
      */
     $(init)
-    let campoMinas;
-    let tableroArrayDom;
-    let arrayDestapadas;
-    let tableroDom;
-    let reiniciaDom;
-    let numeroDeBanderasDom;
-    let numeroDeBanderas;
-    let arrayMina;
-    let banderasDom;
-    let corriendo = false;
-    let tiempo_corriendo;
-
-    let horasDom;
-    let minutosDom;
-    let segundosDom;
+    let campoMinas,
+        tableroArrayDom,
+        arrayDestapadas,
+        tableroDom,
+        reiniciaDom,
+        numeroDeBanderasDom,
+        numeroDeBanderas,
+        arrayMina,
+        banderasDom,
+        corriendo = false,
+        tiempo_corriendo,
+        horasDom,
+        minutosDom,
+        segundosDom;
 
     function init() {
         tableroDom = $(".Tablero");
@@ -35,20 +34,19 @@
 
     function iniciarPartida() {
         switch ($("select option:selected").text()) {
-            case "Facil":
-                campoMinas = buscaminas.init();
-                break;
             case "Medio":
                 campoMinas = buscaminas.init(2);
                 break;
-            case "Dificil":
+            case "Difícil":
                 campoMinas = buscaminas.init(3);
                 break;
             default:
-                buscaminas.init();
+                campoMinas = buscaminas.init();
+                break;
         }
         alternaReinicia('none');
-        restaurarReloj();detenerReloj();
+        restaurarReloj();
+        detenerReloj();
         creacionTablero();
         banderasDom.css({
             "color": "black"
@@ -65,50 +63,30 @@
             [i, j] = e.target.id.split("_");
             try {
                 //Click Doble
-                if (e.button == 2 && e.buttons == 3) {
-                    arrayDestapadas = buscaminas.despejar(parseInt(i), parseInt(j));
-                    actualizaTableroPicar();
+                if (e.buttons === 3) {
+                    ayudaDescubrirCasilla(i, j);
                 }
                 //Click Derecho
-                if (e.button == 2 && e.buttons == 2) {
-                    if (tableroArrayDom[i][j].hasClass("casillaDescubierta")) {
-                        return;
-                    }
-                    buscaminas.marcar(parseInt(i), parseInt(j));
+                else if (e.buttons === 2) {
                     marcaCasilla(i, j);
                 }
                 //Click Izquierdo
-                if (e.button == 0 && e.buttons == 1) {
-                    if (!tableroArrayDom[i][j].hasClass("casillaDescubierta")) {
-                        arrayDestapadas = buscaminas.picar(parseInt(i), parseInt(j));
-                        actualizaTableroPicar();
-                        if (!corriendo) {
-                            activaFuncionamientoReloj();
-                        }
-                    }
+                else if (e.buttons === 1) {
+                    picarCasilla(i, j);
                 }
             } catch (e) {
-                if (e.message == "BOMM!!") {
+                if (e.message === "BOMM!!")
                     perder();
-                }
-                if (e.message == "Enhorabuena, has ganado.") {
-                    ganar();
-                }
-                if (e.message == "Has perdido, inicia una partida." || e.message == "Enhorabuena, has ganado.") {
-                    if(reiniciaDom.hasClass('scale-animation')){
-                        reiniciaDom.removeClass('scale-animation');
-                        reiniciaDom.offset();
-                    }
-                    reiniciaDom.addClass('scale-animation');
-                        // .velocity({ //Pequeña animación para recordarnos que tenemos que empezar una partida si hemos perdido.
-                        //     "font-size": "200px"
-                        // }, 100, "linear")
-                        // .velocity({
-                        //     "font-size": "100px"
-                        // }, 10000, "linear");
+                else if (e.message === "Enhorabuena, has ganado.") {
+                    ganar(e);
+                } else
+                    console.log(e.message); // Para recoger otro tipo de errores.
 
+                if (e.message === "Has perdido, inicia una partida." || e.message === "Enhorabuena, has ganado.") {
+                    reiniciaDom.hide(1, () => {
+                        reiniciaDom.show('shake');
+                    });
                 }
-                console.log(e.message);
             }
         });
         reiniciaDom.click(function () {
@@ -125,10 +103,9 @@
         for (let i = 0; i < campoMinas.length; i++) {
             tableroArrayDom[i] = [campoMinas.length];
             for (let j = 0; j < campoMinas[1].length; j++) {
-                tableroArrayDom[i][j] = $('<div class="casillaBuscamina"><span><span></div>');
-                tableroArrayDom[i][j].attr('id', i + "_" + j);
+                tableroArrayDom[i][j] = $('<div id='+i+'_'+j+' class="casillaBuscamina"><span><span></div>');
                 divContenedor.append(tableroArrayDom[i][j]);
-                if (campoMinas[i][j].valor == 9) {
+                if (campoMinas[i][j].valor === 9) {
                     arrayMina.push(tableroArrayDom[i][j]); //Creación de una array con las coordenadas de las minas para acceder a ellas de una manera más facil.
                     numeroDeBanderas++;
                 }
@@ -136,13 +113,47 @@
         }
         numeroDeBanderasDom.text(numeroDeBanderas);
         tableroDom.html(divContenedor);
-        $('.Tablero>div').css("grid-template-columns", "repeat(" + campoMinas.length + ",1fr)");
-        $('.casillaBuscamina').css("height", tableroArrayDom[1][2].css('width'));
-        //Ajustamos el tamaño de las casillas al ancho deseado y hacemos que sean cuadradas.
+        aplicaEstilosTablero();
+    }
+
+    function aplicaEstilosTablero() {
+        if (campoMinas.length < 10) {
+            $('.Tablero>div').css("grid-template-columns", "repeat(" + campoMinas.length + ",113px)");
+            $('.casillaBuscamina').css("height", '110px');
+        } else if (campoMinas.length > 10 && campoMinas.length < 17) {
+            $('.Tablero>div').css("grid-template-columns", "repeat(" + campoMinas.length + ",56px)");
+            $('.casillaBuscamina').css("height", '56px');
+        } else if (campoMinas.length > 25 && campoMinas.length < 120) {
+            $('.Tablero>div').css("grid-template-columns", "repeat(" + campoMinas.length + ",30px)");
+            $('.casillaBuscamina').css("height", '30px');
+        }
+    }
+
+    function picarCasilla(i, j) {
+        if (!tableroArrayDom[i][j].hasClass("casillaDescubierta")) {
+            arrayDestapadas = buscaminas.picar(parseInt(i), parseInt(j));
+            actualizaTableroPicar();
+            if (!corriendo) {
+                activaFuncionamientoReloj();
+            }
+        }
+    }
+
+    function ayudaDescubrirCasilla(i, j) {
+        [arrayDestapadas, arrayCircundantes] = buscaminas.despejar(parseInt(i), parseInt(j));
+        actualizaTableroPicar();
+        $.each(arrayCircundantes, function (index, value) {
+            if (tableroArrayDom[value.i][value.j].hasClass('casillaBuscamina')) {
+                if (tableroArrayDom[value.i][value.j].hasClass('colorAnimation')) {
+                    tableroArrayDom[value.i][value.j].removeClass('colorAnimation');
+                    tableroArrayDom[value.i][value.j].offset();
+                }
+                tableroArrayDom[value.i][value.j].addClass('colorAnimation');
+            }
+        });
     }
 
     function actualizaTableroPicar() {
-
         $.each(arrayDestapadas, function (index, value) {
             setTimeout(function () {
                 descubreCasilla(value.i, value.j)
@@ -166,23 +177,18 @@
         alternaReinicia("inline");
     }
 
-    function ganar() {
+    function ganar(e) {
         tableroDom.append("<p class='mensajeVictoria'>Enhorabuena, has ganado.</p>");
+        arrayDestapadas = e.arrayLevantadas;
+        actualizaTableroPicar();
+        for (value of arrayMina) {
+            value.css({
+                background: "url(img/ganar.png)",
+                "background-size": "cover"
+            })
+        }
         $(".casillaDescubierta").css({
             "background-color": "rgba(106,185,53,0.64)"
-        });
-        $.each(campoMinas, function (index) {
-            $.each(campoMinas[index], function (index2, value) {
-                if (value.valor != 9) {
-                    descubreCasilla(index, index2);
-                }
-                if (value.valor == 9) {
-                    tableroArrayDom[index][index2].css({
-                        background: "url(img/ganar.png)",
-                        "background-size": "cover"
-                    })
-                }
-            })
         });
         detenerReloj();
         alternaReinicia("inline");
@@ -199,6 +205,10 @@
         if (!tableroArrayDom[i][j].hasClass("casillaDescubierta")) { //Si no está descubierta ya
             tableroArrayDom[i][j].removeClass("casillaBuscamina");
             tableroArrayDom[i][j].addClass("casillaDescubierta");
+            tableroArrayDom[i][j].fadeOut(1, () => {
+                tableroArrayDom[i][j].fadeIn(500);
+            });
+
             if (campoMinas[i][j].valor !== 0) { //Si el valor es 0, no muestro su valor.
                 switch (campoMinas[i][j].valor) {
                     case 1:
@@ -244,30 +254,28 @@
                 }
             }
             tableroArrayDom[i][j].css({
-                "animation": "animacion 0.3s 1 linear",
                 "background-size": "cover"
             });
         }
     }
 
     function marcaCasilla(i, j) {
+        if (!tableroArrayDom[i][j].hasClass("casillaDescubierta")) {
+            buscaminas.marcar(parseInt(i), parseInt(j));
+            marcaCasillaDOM(i, j);
+        }
+
+    }
+
+    function marcaCasillaDOM(i, j) {
         if (tableroArrayDom[i][j].hasClass("casillaBuscamina")) {
             if (numeroDeBanderas === 0) { //Si ya has puesto todas las banderas, no te deja marcar más
                 banderasDom.css({
                     "color": "red"
                 });
-                // if(banderasDom.hasClass('scale-animation')){
-                //     banderasDom.removeClass('scale-animation');
-                //     banderasDom.offset();
-                // }
-                // banderasDom.addClass('scale-animation');
-                 banderasDom
-                     .velocity({
-                         "font-size": "50px"
-                     }, 200, "linear")
-                     .velocity({
-                         "font-size": "20px"
-                     }, 400, "linear");
+                banderasDom.hide(1, () => {
+                    banderasDom.show('bounce');
+                });
                 return;
             }
             tableroArrayDom[i][j].addClass("casillaMarcada");
@@ -320,6 +328,7 @@
         clearInterval(tiempo_corriendo);
         corriendo = false;
     }
+
     function restaurarReloj() {
         horasDom.text('00');
         minutosDom.text('00');
