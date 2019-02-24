@@ -3,21 +3,67 @@
      * @author Marcos Gallardo Pérez
      */
     $(init)
+    /**
+     * Matriz que viene de la capa de negocio donde se guardan los valores
+     */
     let campoMinas,
+        /**
+         * Matriz de elementos Div, que es lo que le mostramos al usuario
+         */
         tableroArrayDom,
+        /**
+         * Array que se va a llenar de coordenadas que se van a destapar en cada acción
+         */
         arrayDestapadas,
+        /**
+         * Tablero contenedor del tableroArrayDom. 
+         */
         tableroDom,
+        /**
+         * Elemento div que vamos a usar para reiniciar un partida que ha terminado.
+         */
         reiniciaDom,
+        /**
+         * Elemento del dom que da información sobre las banderas que quedan por usar
+         */
         numeroDeBanderasDom,
+        /**
+         * Número de banderas que quedan por poner
+         */
         numeroDeBanderas,
+        /**
+         * Array con la posición de las minas que hay puestas en el tablero
+         */
         arrayMina,
+        /**
+         * Elemento del dom que recoje el icono y el numeroDeBanderasDom.
+         */
         banderasDom,
+        /**
+         * Controlador del reloj de la partida
+         */
         corriendo = false,
+        /**
+         * Tiempo que lleva el juego
+         */
         tiempo_corriendo,
+        /**
+         * Numero de horas que lleva la partida
+         */
         horasDom,
+        /**
+         * Número de minutos que lleva la partida
+         */
         minutosDom,
+        /**
+         * Segundos que lleva la partida
+         */
         segundosDom;
 
+    /**
+     * Función encargada de iniciar el contenido del juego. En  ella se recojen en variables los elementos del dom
+     * para evitar que se hagan muchas llamadas al dom durante la ejecución. 
+     */
     function init() {
         tableroDom = $(".Tablero");
         reiniciaDom = $(".Reinicia");
@@ -27,11 +73,13 @@
         horasDom = $("#horas");
         minutosDom = $("#minutos");
         segundosDom = $("#segundos");
-        $("#dificultad").change(iniciarPartida).change();
+        $("#dificultad").change(iniciarPartida).change(); //Se autolanza al principio para que inicie el juego
 
         asignacionEventosDom();
     }
-
+    /**
+     * Función encargada de iniciar el juego. Pone todas la variables del juego a su estado inicial
+     */
     function iniciarPartida() {
         switch ($("select option:selected").text()) {
             case "Medio":
@@ -52,7 +100,9 @@
             "color": "black"
         });
     }
-
+    /**
+     * Función encargada de asignar los eventos a las distintas partes del Dom 
+     */
     function asignacionEventosDom() {
         //Quitar el menu contextual
         tableroDom.contextmenu(function (e) {
@@ -76,7 +126,7 @@
                 }
             } catch (e) {
                 if (e.message === "BOMM!!")
-                    perder();
+                    perder(e);
                 else if (e.message === "Enhorabuena, has ganado.") {
                     ganar(e);
                 } else
@@ -94,7 +144,9 @@
             alternaReinicia('none');
         });
     }
-
+    /**
+     * Crea el tablero visual que es lo que le llega al usuario
+     */
     function creacionTablero() {
         arrayMina = [];
         numeroDeBanderas = 0;
@@ -103,7 +155,7 @@
         for (let i = 0; i < campoMinas.length; i++) {
             tableroArrayDom[i] = [campoMinas.length];
             for (let j = 0; j < campoMinas[1].length; j++) {
-                tableroArrayDom[i][j] = $('<div id='+i+'_'+j+' class="casillaBuscamina"><span><span></div>');
+                tableroArrayDom[i][j] = $('<div id=' + i + '_' + j + ' class="casillaBuscamina"><span><span></div>');
                 divContenedor.append(tableroArrayDom[i][j]);
                 if (campoMinas[i][j].valor === 9) {
                     arrayMina.push(tableroArrayDom[i][j]); //Creación de una array con las coordenadas de las minas para acceder a ellas de una manera más facil.
@@ -115,7 +167,9 @@
         tableroDom.html(divContenedor);
         aplicaEstilosTablero();
     }
-
+    /**
+     * Añade css al tablero para cuadrarlo según las fichas que tenga
+     */
     function aplicaEstilosTablero() {
         if (campoMinas.length < 10) {
             $('.Tablero>div').css("grid-template-columns", "repeat(" + campoMinas.length + ",113px)");
@@ -129,6 +183,11 @@
         }
     }
 
+    /**
+     * Recoje todas las acciones que se llevan a cabo cuando se pica una casilla.
+     * @param {Coordenada x} i 
+     * @param {Coordenada y} j 
+     */
     function picarCasilla(i, j) {
         if (!tableroArrayDom[i][j].hasClass("casillaDescubierta")) {
             arrayDestapadas = buscaminas.picar(parseInt(i), parseInt(j));
@@ -139,6 +198,11 @@
         }
     }
 
+    /**
+     * Recoje todas las acciones que se llevan a cabo cuando se despeja una casilla.
+     * @param {Coordenada x} i 
+     * @param {Coordenada y} j 
+     */
     function ayudaDescubrirCasilla(i, j) {
         [arrayDestapadas, arrayCircundantes] = buscaminas.despejar(parseInt(i), parseInt(j));
         actualizaTableroPicar();
@@ -153,30 +217,48 @@
         });
     }
 
+    /**
+     * Coge el arrayDestapadas y muestra su contenido aplicandole una animación.
+     */
     function actualizaTableroPicar() {
         $.each(arrayDestapadas, function (index, value) {
-            setTimeout(function () {
-                descubreCasilla(value.i, value.j)
-            }, index * 10 + 100);
+            // setTimeout(function () {
+                descubreCasilla(value.i, value.j,index * 10 + 100)
+            // }, index * 10 + 100);
         });
 
     }
-
-    function perder() {
-        $(".casillaDescubierta").css({
+    /**
+     * Recoje todas las acciones que se llevan a cabo cuando se pierde la partida.
+     */
+    function perder(error) {
+        
+        $("#" + error.i + "_" + error.j).hide(100).css({    //Muestra la primera bomba
+            background: "url(img/mina.png)",
+            "background-size": "cover",
+            border: "1px solid red"
+        }).show('pulsate', 1000);
+        
+        $.each(arrayMina, function (index, value) { //Muestra las demas bombas
+            setTimeout(() => {
+                value.hide(100);
+                value.css({
+                    background: "url(img/mina.png)",
+                    "background-size": "cover",
+                    border: "1px solid red"
+                })
+                value.show('pulsate', 1000);
+            }, index * 10 + 100)
+        })
+        $(".casillaDescubierta").css({  //Pone el fondo de rojo.
             "background-color": "rgba(185,53,53,0.64)"
         });
-        for (value of arrayMina) {
-            value.css({
-                background: "url(img/mina.png)",
-                "background-size": "cover",
-                border: "1px solid red"
-            })
-        }
         detenerReloj();
         alternaReinicia("inline");
     }
-
+    /**
+     * Recoje todas las acciones que se llevan a cabo cuando se pierde la partida.
+     */
     function ganar(e) {
         tableroDom.append("<p class='mensajeVictoria'>Enhorabuena, has ganado.</p>");
         arrayDestapadas = e.arrayLevantadas;
@@ -194,6 +276,9 @@
         alternaReinicia("inline");
     }
 
+    /**
+     * Muestra o oculta el div que te permite reiniciar la partida
+     */
     function alternaReinicia(tipoDisplay) {
         reiniciaDom.css({
             display: tipoDisplay
@@ -201,11 +286,16 @@
 
     }
 
-    function descubreCasilla(i, j) {
+    /**
+     * Al pasarle una coordenada, muestra su contenido. 
+     * @param {Coordenada x} i 
+     * @param {Coordenada Y} j 
+     */
+    function descubreCasilla(i, j,delay) {
         if (!tableroArrayDom[i][j].hasClass("casillaDescubierta")) { //Si no está descubierta ya
             tableroArrayDom[i][j].removeClass("casillaBuscamina");
             tableroArrayDom[i][j].addClass("casillaDescubierta");
-            tableroArrayDom[i][j].fadeOut(1, () => {
+            tableroArrayDom[i][j].delay(delay).fadeOut(1, () => {
                 tableroArrayDom[i][j].fadeIn(500);
             });
 
@@ -259,6 +349,9 @@
         }
     }
 
+    /**
+     * Controla si se puede marcar una casilla y en caso de que se pueda, llama al método que la marca
+     */
     function marcaCasilla(i, j) {
         if (!tableroArrayDom[i][j].hasClass("casillaDescubierta")) {
             buscaminas.marcar(parseInt(i), parseInt(j));
@@ -266,7 +359,9 @@
         }
 
     }
-
+    /**
+     * Recoje todas las acciones que se llevan a cabo cuando se marca una casilla.
+     */
     function marcaCasillaDOM(i, j) {
         if (tableroArrayDom[i][j].hasClass("casillaBuscamina")) {
             if (numeroDeBanderas === 0) { //Si ya has puesto todas las banderas, no te deja marcar más
@@ -278,8 +373,9 @@
                 });
                 return;
             }
-            tableroArrayDom[i][j].addClass("casillaMarcada");
-            tableroArrayDom[i][j].removeClass("casillaBuscamina");
+            tableroArrayDom[i][j].removeClass("casillaBuscamina", 500, () => {
+                tableroArrayDom[i][j].addClass("casillaMarcada");
+            });
             numeroDeBanderasDom.text(--numeroDeBanderas);
 
         } else { //Esto ocurre al picar sobre una bandera ya puesta
@@ -291,7 +387,9 @@
             numeroDeBanderasDom.text(++numeroDeBanderas);
         }
     }
-
+    /**
+     * Activa el funcionamiento del reloj
+     */
     function activaFuncionamientoReloj() {
         let tiempo = {
             hora: 0,
@@ -323,12 +421,17 @@
         corriendo = true;
 
     }
-
+    /**
+     * Detiene el reloj
+     */
     function detenerReloj() {
         clearInterval(tiempo_corriendo);
         corriendo = false;
     }
 
+    /**
+     * Restaura el funcionamiento del reloj
+     */
     function restaurarReloj() {
         horasDom.text('00');
         minutosDom.text('00');

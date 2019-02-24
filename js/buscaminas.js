@@ -187,7 +187,10 @@ let buscaminas = (function () {
             return;
         }
         if (campoMinas[i][j].valor === 9) {
-            throw new Error("BOMM!!");
+            let error = new Error("BOMM!!");
+            error.i = i;
+            error.j = j
+            throw error;
         }
 
         arrayLevantadas.push({
@@ -292,27 +295,27 @@ let buscaminas = (function () {
         accionMostrando(i, j, marcar);
         return campoMinas[i][j].bandera;
     }
-/**
- * Pica las casillas colindantes a las proporcionadas en caso de que sea obvio que no
- * son minas. 
- * @param {Coordenada x} i 
- * @param {Coordenada y} j 
- * @returns {Coordenadas de la casillas picadas} arrayLevantadas,
- * @returns {Coordenadas de las casillas circundantes a la proporcionada} arrayCircundantes
- */
+    /**
+     * Pica las casillas colindantes a las proporcionadas en caso de que sea obvio que no
+     * son minas. 
+     * @param {Coordenada x} i 
+     * @param {Coordenada y} j 
+     * @returns {Coordenadas de la casillas picadas} arrayLevantadas,
+     * @returns {Coordenadas de las casillas circundantes a la proporcionada} arrayCircundantes
+     */
     function despejarCasilla(i, j) {
         arrayLevantadas = [];
         arrayCircundantes = [];
         accionMostrando(i, j, despejar);
         return [arrayLevantadas, arrayCircundantes];
     }
-/**
- * Aplica una funcionalidad definida a una coordenada proporcionada, comprueba si 
- * salta algún error definido en el juego y lo lanza para que se pueda recoger fuera
- * @param {Coordenada x} i 
- * @param {Coordenada y} j 
- * @param {Funcionalidad que le vamos a aplicar a la casilla proporcionada} funcion 
- */
+    /**
+     * Aplica una funcionalidad definida a una coordenada proporcionada, comprueba si 
+     * salta algún error definido en el juego y lo lanza para que se pueda recoger fuera
+     * @param {Coordenada x} i 
+     * @param {Coordenada y} j 
+     * @param {Funcionalidad que le vamos a aplicar a la casilla proporcionada} funcion 
+     */
     function accionMostrando(i, j, funcion) {
         try {
             if (perdida) {
@@ -323,9 +326,11 @@ let buscaminas = (function () {
             }
             funcion(i, j);
         } catch (e) {
-            if (e.message === "BOMM!!")
+            if (e.message === "BOMM!!") {
                 perdida = true;
-            else if (e.message === "Enhorabuena, has ganado.") {
+                console.log(e.i)
+                throw e;
+            } else if (e.message === "Enhorabuena, has ganado.") {
                 let error = new Error("Enhorabuena, has ganado.");
                 error.arrayLevantadas = arrayLevantadas;
                 throw error;
