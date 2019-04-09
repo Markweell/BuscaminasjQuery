@@ -3,41 +3,49 @@ let buscaminas = (function () {
     /**
      * Variable en la que guardamos la matriz del juego
      */
-    let campoMinas,
-        /**
-         * Variable que controla si el jugador ha perdido ya o no.
-         */
-        perdida = true,
-        /**
-         * Variable para controlar la victoria, en ella vamos 
-         * a contar el numero de casillas que quedan por descubrir
-         */
-        numLibres = 0,
-        /**
-         * Columnas de la matriz del campo de minas
-         */
-        columnasCampoMinas,
-        /**
-         * Filas de la matriz del campo de minas
-         */
-        filasCampoMinas,
-        /**
-         * Array con las cordenadas de las casillas picadas.
-         */
-        arrayLevantadas,
-        /**
-         * Array donde vamos a guardar las coordenadas de las casillas circundantes a una
-         * especificada.
-         */
-        arrayCircundantes,
-        /**
-         * Array con las coordenadas de las minas.
-         */
-        arrayPosicionMinas = [],
-        /**
-         * Variable que vamos a usar para contar las minas circundantes
-         */
-        numBanderasCircundantes;
+    let campoMinas;
+
+    /**
+     * Variable que controla si el jugador ha perdido ya o no.
+     */
+    let perdida = true;
+
+    /**
+     * Variable para controlar la victoria, en ella vamos 
+     * a contar el numero de casillas que quedan por descubrir
+     */
+    let numLibres = 0;
+
+    /**
+     * Columnas de la matriz del campo de minas
+     */
+    let columnasCampoMinas;
+
+    /**
+     * Filas de la matriz del campo de minas
+     */
+    let filasCampoMinas;
+
+    /**
+     * Array con las cordenadas de las casillas picadas.
+     */
+    let arrayLevantadas;
+
+    /**
+     * Array donde vamos a guardar las coordenadas de las casillas circundantes a una
+     * especificada.
+     */
+    let arrayCircundantes;
+
+    /**
+     * Array con las coordenadas de las minas.
+     */
+    let arrayPosicionMinas = [];
+
+    /**
+     * Variable que vamos a usar para contar las minas circundantes
+     */
+    let numBanderasCircundantes;
 
     /**
      * Cada una de los elementos de la matriz que compone el juego
@@ -73,7 +81,7 @@ let buscaminas = (function () {
             default:
                 numFilas = 8;
                 numComlumnas = 8;
-                numMinas = 3;
+                numMinas = 8;
                 break;
         }
         arrayPosicionMinas = [];
@@ -328,7 +336,6 @@ let buscaminas = (function () {
         } catch (e) {
             if (e.message === "BOMM!!") {
                 perdida = true;
-                console.log(e.i)
                 throw e;
             } else if (e.message === "Enhorabuena, has ganado.") {
                 let error = new Error("Enhorabuena, has ganado.");
@@ -343,7 +350,7 @@ let buscaminas = (function () {
      * Muestra por consola el tablero del juego
      */
     function mostrarTableroJuego() {
-        tablero = "  ";
+        let tablero = "  ";
         for (let i = 0; i < campoMinas.length; i++) {
             if (i === 0) {
                 for (let j = 0; j < campoMinas[i].length; j++) {
@@ -377,12 +384,11 @@ let buscaminas = (function () {
             } else
                 tablero += "■ " + " ";
         }
-        console.log(tablero);
     }
 
     return {
         init: init,
-        mostrar: mostrarTableroJuego,
+        //mostrar: mostrarTableroJuego,
         picar: picarCasilla,
         marcar: marcarCasilla,
         despejar: despejarCasilla

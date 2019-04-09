@@ -125,7 +125,7 @@ p {
 .casillaMarcada{
     background: url('../img/bandera.png');
     background-size: cover;
-    border: 1px solid white;
+    border: 1px solid black;
     text-align: center;
     display: flex;
     justify-content: center;
