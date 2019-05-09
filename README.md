@@ -7,7 +7,7 @@ Se trata del mítico juego del buscaminas hecho con javascript y jQuery. El jueg
 
 ------------
 
- ### Demo [aquí]()
+ ### Demo [aquí](https://markweell.github.io/BuscaminasjQuery/)
 
 ------------
 
